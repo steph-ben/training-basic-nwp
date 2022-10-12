@@ -69,7 +69,7 @@ Now we are ready to explore our data.
 
 As introduction NetCDF data structure can be summarized as below :
 
-dataset-diagram.png
+![img.png](img.png)
 
 Source : https://docs.xarray.dev/en/stable/user-guide/data-structures.html#dataset
 
