@@ -1,92 +1,183 @@
-# Training Basic Nwp
+# Training GRIB and NetCDF
 
-Basic manipulation of GRIB and NetCDF files under linux
+Basic manipulation of GRIB and NetCDF files under linux.
+
+In this course we will learn :
+
+- How to have Linux-ready environment with NetCDF and GRIB tools
+- How to explore NetCDF and GRIB file from the command line
+- How to explore NetCDF and GRIB file interactively
+
 
 ## Getting started
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### Installing Conda package manager
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Conda is an open source package management system and enviornment system. It allows to easily creates, saves, loads and switches between enviornments. Source :  https://docs.conda.io/en/latest/
 
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+* Open a terminal
+* Download and install it
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.mfi.tls/nwp-processing/training-basic-nwp.git
-git branch -M main
-git push -uf origin main
+wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+bash Mambaforge-$(uname)-$(uname -m).sh -b
+${HOME}/mambaforge/condabin/conda init
+source ${HOME}/.bashrc
 ```
 
-## Integrate with your tools
+### Install our tools
 
-- [ ] [Set up project integrations](https://gitlab.mfi.tls/nwp-processing/training-basic-nwp/-/settings/integrations)
+We will install the following tools :
 
-## Collaborate with your team
+* NetCDF4 library, cf. https://www.unidata.ucar.edu/software/netcdf/
+* WGrib tools, cf. https://www.cpc.ncep.noaa.gov/products/wesley/wgrib.html
+* CDO, cf. https://code.mpimet.mpg.de/projects/cdo/wiki/Tutorial
+* GDAL, cf. https://gdal.org/
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
 
-## Test and Deploy
+To proceed, type the following in a terminal : 
 
-Use the built-in continuous integration in GitLab.
+```
+mamba install -y netcdf4
+mamba install -y wgrib wgrib2
+mamba install -y cdo
+```
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
 
-***
+### Get sample data
 
-# Editing this README
+We will download some test data to play with our tools :
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+* `air_temperature.nc` : NCEP reanalysis subset
+* `gfs.t00z.pgrb2.1p00.f024` : GFS 1.0 forecast range +24h
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
 
-## Name
-Choose a self-explaining name for your project.
+To proceed, type the following in a terminal :
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```
+mkdir -p ${HOME}/data
+cd ${HOME}/data
+wget https://github.com/pydata/xarray-data/raw/master/air_temperature.nc
+wget https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.20221012/00/atmos/gfs.t00z.pgrb2.1p00.f024
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+Now we are ready to explore our data.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## Explore NetCDF data
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+As introduction NetCDF data structure can be summarized as below :
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+dataset-diagram.png
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Source : https://docs.xarray.dev/en/stable/user-guide/data-structures.html#dataset
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+### ncdump : check variable list
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+The first step to explore a NetCDF file is to use `ncdump` command. Type the following in a terminal :
 
-## License
-For open source projects, say how it is licensed.
+```
+ncdump -h air_temperature.nc
+```
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Questions :
+
+- How many variables are presents in the file ?
+- What is the meaning of each variable ?
+- How many dimensions have the `air` variable ?
+
+
+Bonus :
+
+- Try the `ncinfo` command as well
+
+
+### ncdump : check data values
+
+We can explore data values with the following option :
+
+```
+ncdump -v lat air_temperature.nc
+```
+
+Questions :
+
+- What is the bounding box of data in the file ? (eg. minimum and maximum latitudes and longitudes)
+- How to display all values for the `air` variable ?
+
+
+
+## Explore GRIB data
+
+### wgrib : check variable list
+
+The first step to explore a GRIB file is to use `wgrib` command. Type the following in a terminal :
+
+```
+wgrib2 era5-2mt-2019-03-uk.grib 
+```
+
+To get more details about one particular GRIB, you can use :
+
+```
+wgrib2 -d 0 -V gfs.t00z.pgrb2.1p00.f024
+```
+
+
+Questions :
+
+- How many single GRIB are present in the file ?
+- Can you describe some of the variable available ?
+
+
+Bonus :
+
+- Try the `grib_ls` command
+- Try the `grib_dump` command
+
+
+
+### wgrib : check data values
+
+
+We can explore data values with the following option :
+
+
+```
+grib_dump -w shortName=prmsl gfs.t00z.pgrb2.1p00.f024 
+```
+
+Questions :
+
+- What is the GRIB key indicating the date of the run ?
+- What are the latitude and longitude of the GRIB ?
+
+
+
+
+## Bonus : plotting with Python
+
+You can easily plot graphical output using Xaray library, cf. https://docs.xarray.dev/en/stable/
+
+* Open a linux terminal and add required packages
+
+```
+mamba install -y ipython xarray cfgrib matplotlib
+```
+
+* Open a python shell by typing :
+
+```
+ipython
+```
+
+* Type the following to create PNG output :
+
+```
+import xarray as xr
+ds = xr.open_dataset("air_temperature.nc")
+print(ds)
+ds.plot()
+```
