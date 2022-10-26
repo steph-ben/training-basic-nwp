@@ -116,7 +116,7 @@ Questions :
 The first step to explore a GRIB file is to use `wgrib` command. Type the following in a terminal :
 
 ```
-wgrib2 era5-2mt-2019-03-uk.grib 
+wgrib2 gfs.t00z.pgrb2.1p00.f024
 ```
 
 To get more details about one particular GRIB, you can use :
