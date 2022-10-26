@@ -58,7 +58,7 @@ To proceed, type the following in a terminal :
 mkdir -p ${HOME}/data
 cd ${HOME}/data
 wget https://github.com/pydata/xarray-data/raw/master/air_temperature.nc
-wget https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.20221012/00/atmos/gfs.t00z.pgrb2.1p00.f024
+wget https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.20221026/00/atmos/gfs.t00z.pgrb2.1p00.f024
 ```
 
 Now we are ready to explore our data.
